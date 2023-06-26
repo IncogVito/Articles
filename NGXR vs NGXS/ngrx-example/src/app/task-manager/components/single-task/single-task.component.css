@@ -1,0 +1,41 @@
+.task {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.task-checkbox {
+  margin-right: 10px;
+}
+
+.task-checkbox input[type="checkbox"] {
+  transform: scale(1.5);
+}
+
+.task-content {
+  flex: 1;
+}
+
+.task-content--resolved {
+  text-decoration: line-through;
+}
+
+.task-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.task-actions button i {
+  color: #888;
+  transition: color 0.3s;
+}
+
+.task-actions button:hover i {
+  color: #333;
+}

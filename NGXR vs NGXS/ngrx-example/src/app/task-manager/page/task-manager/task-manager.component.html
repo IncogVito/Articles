@@ -1,0 +1,17 @@
+<h2>Task Manager</h2>
+
+<div class="add-task">
+  <input type="text" [(ngModel)]="newTaskContent"
+         placeholder="Add new task">
+  <button (click)="addTask()">Add</button>
+</div>
+
+<div class="tasks" *ngIf="tasksState$ | async as tasksState">
+  <app-single-task *ngFor="let singleTask of tasksState.allTasks"
+                   [task]="singleTask"
+                   (resetTask)="resetTask($event)"
+                   (resolveTask)="resolveTask($event)"
+                   (deleteTask)="deleteTask($event)"
+  >
+  </app-single-task>
+</div>

@@ -1,0 +1,17 @@
+<div class="task" *ngIf="task">
+  <div class="task-checkbox">
+    <input type="checkbox" [ngModel]="task.resolved"
+           (change)="statusChanged($event)"
+    >
+  </div>
+  <div class="task-content"
+       [class.task-content--resolved]="task.resolved"
+  >
+    {{ task.content }}
+  </div>
+  <div class="task-actions">
+    <button (click)="deleteTask.emit(task)">
+      X
+    </button>
+  </div>
+</div>
