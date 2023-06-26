@@ -1,5 +1,5 @@
 import {TaskModel} from "../../model/task.model";
-import {Action, State, StateContext, Store} from "@ngxs/store";
+import {Action, Selector, State, StateContext, Store} from "@ngxs/store";
 import {Injectable} from "@angular/core";
 import {EMPTY, Observable, take, tap} from "rxjs";
 import {TasksService} from "../../service/tasks.service";
@@ -60,6 +60,16 @@ export class TasksState {
 
     ctx.patchState({
       allTasks: updatedTasks
+    });
+  }
+
+  @Action(TaskActions.CreateTask)
+  createTask(ctx: StateContext<TasksStateModel>, action: TaskActions.CreateTask) {
+    const content = action.payload.content;
+    const newTask: TaskModel = {content: content, id: Date.now(), resolved: false}
+
+    ctx.patchState({
+      allTasks: [...ctx.getState().allTasks, newTask]
     });
   }
 }

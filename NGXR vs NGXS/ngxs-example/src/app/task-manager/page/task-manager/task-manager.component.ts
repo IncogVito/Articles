@@ -3,7 +3,7 @@ import {AppState} from "../../store/app-state.model";
 import {EMPTY, Observable} from "rxjs";
 import {TasksState, TasksStateModel} from "../../store/task/task.state";
 import {TaskModel} from "../../model/task.model";
-import {Store} from "@ngxs/store";
+import {Select, Selector, Store} from "@ngxs/store";
 import {TaskActions} from "../../store/task/task.actions";
 import LoadInitialTasks = TaskActions.LoadInitialTasks;
 import UpdateTask = TaskActions.UpdateTask;
@@ -18,16 +18,14 @@ import CreateTask = TaskActions.CreateTask;
 export class TaskManagerComponent implements OnInit {
   newTaskContent: string = ''
 
-  public tasksState$: Observable<TasksStateModel> = this.tasksState.tasksState$;
+  @Select(TasksState)
+  public tasksState$!: Observable<TasksStateModel>;
 
-
-  constructor(private readonly store: Store,
-              private readonly tasksState: TasksState) {
+  constructor(private readonly store: Store) {
   }
 
   ngOnInit(): void {
     this.store.dispatch(new LoadInitialTasks());
-    // this.tasksState$ = this.store.select(selectTasksState);
   }
 
   addTask() {

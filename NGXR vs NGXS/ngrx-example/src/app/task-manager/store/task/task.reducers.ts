@@ -7,7 +7,6 @@ const initialState: TasksState = {
   allTasks: []
 }
 
-
 export const tasksReducer = createReducer(
   initialState,
   on(initialTasksLoaded, (state: TasksState, payload: TasksLoadedActionPayload) => ({
