@@ -6,6 +6,7 @@ import {EMPTY, Observable} from "rxjs";
 import {TasksState} from "../../store/task/task.state";
 import {selectTasksState} from "../../store/task/task.selectors";
 import {TaskModel} from "../../model/task.model";
+import {performFullTest} from "../../service/test";
 
 @Component({
   selector: 'app-task-manager',
@@ -17,13 +18,6 @@ export class TaskManagerComponent implements OnInit {
 
   public tasksState$: Observable<TasksState> = EMPTY;
 
-  addTask() {
-    if (this.newTaskContent) {
-      this.store.dispatch(createTask({content: this.newTaskContent}));
-      this.newTaskContent = '';
-    }
-  }
-
   constructor(
     private readonly store: Store<AppState>,) {
   }
@@ -31,6 +25,13 @@ export class TaskManagerComponent implements OnInit {
   ngOnInit(): void {
     this.store.dispatch(loadInitialTasks());
     this.tasksState$ = this.store.select(selectTasksState);
+  }
+
+  addTask() {
+    if (this.newTaskContent) {
+      this.store.dispatch(createTask({content: this.newTaskContent}));
+      this.newTaskContent = '';
+    }
   }
 
   resetTask($event: TaskModel) {

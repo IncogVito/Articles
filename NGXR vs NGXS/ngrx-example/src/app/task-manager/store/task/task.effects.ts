@@ -22,6 +22,14 @@ export class TaskEffects {
               private readonly tasksService: TasksService) {
   }
 
+  public createTask: Observable<Action> = createEffect(() => {
+    return this.actions.pipe(
+      ofType(createTask),
+      map(payload => payload.content),
+      map(content => taskCreatedSuccessfully({content: content, id: Date.now(), resolved: false}))
+    );
+  });
+
   public loadTasks: Observable<Action> = createEffect(() => {
     return this.actions.pipe(
       ofType(loadInitialTasks),
@@ -58,14 +66,6 @@ export class TaskEffects {
         return tasksUpdated({tasks: updatedTasks})
       })
     )
-  });
-
-  public createTask: Observable<Action> = createEffect(() => {
-    return this.actions.pipe(
-      ofType(createTask),
-      map(payload => payload.content),
-      map(content => taskCreatedSuccessfully({content: content, id: Date.now(), resolved: false}))
-    );
   });
 
 }
