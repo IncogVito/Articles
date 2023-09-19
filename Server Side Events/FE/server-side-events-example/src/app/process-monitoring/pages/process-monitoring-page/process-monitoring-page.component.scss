@@ -1,0 +1,47 @@
+.business-process-monitoring-container {
+    text-align: left;
+    padding: 20px;
+  }
+  
+  .business-process-monitoring-title {
+    font-size: 24px;
+    margin-top: 0;
+  }
+  
+  .business-process-monitoring-description {
+    font-size: 24px;
+  }
+  
+  .business-process-monitoring-separator {
+    width: 100%;
+    border: none;
+    height: .1px;
+    background-color: #a2afb3; /* Kolor linii oddzielającej */
+  }
+
+
+  .business-process-monitoring-button {
+    border: 1px solid orangered;
+    color: orangered;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    padding: .3rem .8rem;
+    border-radius: 1rem;
+
+    &:hover {
+        background-color: rgba(255, 68, 0, 0.155);
+    }
+
+    &--start {
+        color: greenyellow;
+        border-color: greenyellow;
+
+        
+    &:hover {
+        background-color: rgba(172, 255, 47, 0.155);
+    }
+    }
+
+  }
