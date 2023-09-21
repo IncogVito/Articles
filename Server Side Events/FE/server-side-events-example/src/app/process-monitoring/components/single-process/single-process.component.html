@@ -1,6 +1,8 @@
-<div class="status-bar">
+<div class="status-bar"
+[ngClass]="'status-bar--' + singleProcess.status"
+>
     <div class="status-bar-left">
-      <p class="date-time">{{ singleProcess.date | date:'medium' }}</p>
+      <p class="date-time">{{ singleProcess.date | date:'HH:mm:ss' }}</p>
     </div>
     <div class="status-bar-center">
       <p class="description">{{ singleProcess.description }}</p>

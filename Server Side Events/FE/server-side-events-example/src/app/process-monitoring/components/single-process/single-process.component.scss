@@ -4,16 +4,39 @@
     align-items: center;
     background-color: #333; /* Ciemne tło */
     color: #fff; /* Kolor tekstu */
-    padding: 10px;
+    padding: .7rem 1rem;
     border: 1px solid #ddd; /* Jasna obramówka */
-    border-radius: 5px;
+    border-radius: 1rem;
+
+    &--SUCCESS {
+        border-color: greenyellow;
+    }
+
+    &--ERROR {
+        border-color: red;
+    }
+    
+    &--WARNING {
+        border-color: orange;
+    }
+
+    margin-bottom: .5rem;
   }
+  
   
   .status-bar-left,
   .status-bar-center,
   .status-bar-right {
     flex: 1;
     text-align: center;
+  }
+
+  .status-bar-left {
+    text-align: left;
+  }
+
+  .status-bar-right {
+    text-align: right;
   }
   
   .date-time,

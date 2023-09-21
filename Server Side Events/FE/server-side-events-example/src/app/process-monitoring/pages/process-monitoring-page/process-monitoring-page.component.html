@@ -1,8 +1,10 @@
 <div class="business-process-monitoring-container">
     <h1 class="business-process-monitoring-title">Business Process Monitoring</h1>
-    <button class="business-process-monitoring-button business-process-monitoring-button--start">Start monitoring</button>
+    <button class="business-process-monitoring-button business-process-monitoring-button--start" (click)="startMonitoring()">Start monitoring</button>
     <hr class="business-process-monitoring-separator">
-    
-        <app-single-process>
-        </app-single-process>
+     
+        <app-single-process *ngFor="let process of processes"
+        [singleProcess]="process"
+        ></app-single-process>
+
   </div>

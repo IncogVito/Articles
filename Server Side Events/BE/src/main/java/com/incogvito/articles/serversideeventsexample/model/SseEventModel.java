@@ -11,4 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor(staticName = "of")
 public class SseEventModel {
     private String message;
+    private ProcessStatus processStatus;
 }

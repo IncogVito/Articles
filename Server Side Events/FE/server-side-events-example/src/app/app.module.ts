@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
+import { ProcessMonitoringModule } from './process-monitoring/process-monitoring.module';
+import { ProcessMonitoringRoutingModule } from './process-monitoring/process-monitoring-routing.module';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { RouterModule } from '@angular/router';
   imports: [
     RouterModule,
     BrowserModule,
-    AppRoutingModule
+    ProcessMonitoringModule,
+    ProcessMonitoringRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
