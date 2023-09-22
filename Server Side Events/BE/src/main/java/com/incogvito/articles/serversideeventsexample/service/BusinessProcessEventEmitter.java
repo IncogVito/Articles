@@ -3,12 +3,15 @@ package com.incogvito.articles.serversideeventsexample.service;
 import com.incogvito.articles.serversideeventsexample.model.ProcessState;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.MessageSource;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
+@Log4j2
 @Component
 @RequiredArgsConstructor
 public class BusinessProcessEventEmitter {
@@ -23,13 +26,12 @@ public class BusinessProcessEventEmitter {
             ProcessState.STARTING, ProcessState.FETCHING_DATA, ProcessState.ERROR_OCCURRED
     );
     private final List<List<ProcessState>> ALL_PATHS = List.of(HAPPY_PATH, NO_DATA_STATE, ERROR_PATH);
-
-
     private final SseEventProcessor sseEventProcessor;
     private final MessageSource messageSource;
 
+    @Async
     public void startMonitoringProcess(Long userId) {
-        System.out.println("Monitoruje process USERID: " + userId);
+        log.info("Monitoruje process USERID: " + userId);
         List<ProcessState> processStates = getRandomPath();
         runProcess(userId, new LinkedList<>(processStates));
     }
@@ -40,7 +42,9 @@ public class BusinessProcessEventEmitter {
         notifyUser(userId, processState);
 
         long randomSleepTime = getRandomSleepTime();
+        log.info("Jestem thread " + Thread.currentThread().getName() + " spie przez " + randomSleepTime);
         Thread.sleep(randomSleepTime);
+        log.info("Jestem thread " + Thread.currentThread().getName() + " obudziłem sie");
 
         if (!CollectionUtils.isEmpty(processStates)) {
             runProcess(userId, processStates);
@@ -54,8 +58,8 @@ public class BusinessProcessEventEmitter {
 
     private long getRandomSleepTime() {
         Random random = new Random();
-        int min = 4000;
-        int max = 10000;
+        int min = 2000;
+        int max = 6000;
         return random.nextInt(max - min + 1) + min;
     }
 
