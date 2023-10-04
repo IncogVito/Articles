@@ -16,6 +16,9 @@ import java.util.*;
 @RequiredArgsConstructor
 public class BusinessProcessEventEmitter {
 
+    /**
+     * Defined three paths which then will be picked randomly.
+     */
     private final List<ProcessState> HAPPY_PATH = List.of(
             ProcessState.STARTING, ProcessState.FETCHING_DATA, ProcessState.BROADCASTING_INFO, ProcessState.FINISHED
     );
@@ -31,7 +34,7 @@ public class BusinessProcessEventEmitter {
 
     @Async
     public void startMonitoringProcess(Long userId) {
-        log.info("Monitoruje process USERID: " + userId);
+        log.info("Starting process monitoring for userId: " + userId);
         List<ProcessState> processStates = getRandomPath();
         runProcess(userId, new LinkedList<>(processStates));
     }
@@ -42,13 +45,17 @@ public class BusinessProcessEventEmitter {
         notifyUser(userId, processState);
 
         long randomSleepTime = getRandomSleepTime();
-        log.info("Jestem thread " + Thread.currentThread().getName() + " spie przez " + randomSleepTime);
         Thread.sleep(randomSleepTime);
-        log.info("Jestem thread " + Thread.currentThread().getName() + " obudziłem sie");
 
         if (!CollectionUtils.isEmpty(processStates)) {
             runProcess(userId, processStates);
+        } else {
+            completeProcess(userId);
         }
+    }
+
+    private void completeProcess(Long userId) {
+        this.sseEventProcessor.completeSseEmitter(userId);
     }
 
     public void notifyUser(Long userId, ProcessState processState) {

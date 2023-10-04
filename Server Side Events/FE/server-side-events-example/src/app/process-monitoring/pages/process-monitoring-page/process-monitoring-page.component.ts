@@ -1,40 +1,35 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { SingleProcessModel } from '../../model/single-process.model';
 import { EMPTY, Observable, Subject, Subscription, map, take, takeUntil, tap } from 'rxjs';
 import { EventModel } from '../../model/event.model';
+import { ProcessMonitoringService } from '../../services/process-monitoring.service';
 
 @Component({
   selector: 'app-process-monitoring-page',
   templateUrl: './process-monitoring-page.component.html',
   styleUrls: ['./process-monitoring-page.component.scss'],
 })
-export class ProcessMonitoringPageComponent implements OnInit {
+export class ProcessMonitoringPageComponent implements OnInit, OnDestroy {
   
-  private currentEventSource: EventSource | undefined;
-  private messageSubject: Subject<any> = new Subject<any>();
-  private stoppedSubscription$: Subject<void> = new Subject();
   public processes: SingleProcessModel[] = [];
   public started: boolean = false;
 
-  constructor(private zone: NgZone) {
+  public currentlySubscribedProcess: Subscription | undefined;
+
+  private ngDestroy$ = new Subject<void>();
+
+  constructor(private zone: NgZone,
+     private readonly processMonitoringService: ProcessMonitoringService) {
     
   }
 
-  getMessageObservable(): Observable<any> {
-    return this.messageSubject.asObservable();
+
+  ngOnDestroy(): void {
+    this.ngDestroy$.next();
+    this.ngDestroy$.complete();
   }
-  
 
   ngOnInit(): void {
-   this.stoppedSubscription$.pipe(take(5)).subscribe(val => console.log("Dostałem"));
-  }
-
-  public stopMonitoring() {
-    this.started = false;
-    if (this.currentEventSource && this.currentEventSource.readyState == EventSource.OPEN) {
-      this.stoppedSubscription$.next();
-      this.currentEventSource.close();
-    }
   }
 
   public startStopMonitoring() {
@@ -45,50 +40,28 @@ export class ProcessMonitoringPageComponent implements OnInit {
     }
   }
 
-
-public startMonitoring() {
-  this.started =true;
-  this.prepareEventSource();
+  startMonitoring() {
+    console.log('starting');
+    this.currentlySubscribedProcess = this.processMonitoringService.startMonitoring()
+    .pipe(
+      takeUntil(this.ngDestroy$)
+      ).subscribe(val => {
+        console.log(val);
+        this.zone.run(() =>
+        this.processes.push(val)
+        );
+      })
+  }
   
-
-    this.getMessageObservable()
-    .pipe(takeUntil(this.stoppedSubscription$))
-    .subscribe((val: EventModel) => {
-      console.log('wrzucam');
-  
-      this.zone.run(() => 
-      this.processes.push({
-        date: new Date(),
-        description: val.message,
-        status: val.processStatus
-      }));
-      console.log(val);
-      // this.processes = [val];
-     });
-}
-
-private prepareEventSource() {
-  if (this.currentEventSource && this.currentEventSource.readyState == EventSource.OPEN) {
-    this.stoppedSubscription$.next();
-    this.currentEventSource.close();
+  stopMonitoring() {
+    this.processMonitoringService.stopMonitoring();
+    if (this.currentlySubscribedProcess) {
+      this.currentlySubscribedProcess.unsubscribe();
+      this.currentlySubscribedProcess = undefined;
+    }
   }
 
-  const eventSource = new EventSource('http://localhost:8080/create/' + Math.floor(Math.random() * 2000000));
 
-    eventSource.onmessage = (event) => {
-      console.log("ON_MESSAGE");
-      const data = JSON.parse(event.data);
-      this.messageSubject.next(data);
 
-    };
-
-    eventSource.onerror = (error) => {
-      console.error('Błąd SSE:', error);
-      eventSource.close();
-      this.stoppedSubscription$.next();
-    };
-
-    this.currentEventSource = eventSource;
-}
 
 }
