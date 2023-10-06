@@ -12,4 +12,5 @@ import lombok.Setter;
 public class SseEventModel {
     private String message;
     private ProcessStatus processStatus;
+    private boolean finished;
 }

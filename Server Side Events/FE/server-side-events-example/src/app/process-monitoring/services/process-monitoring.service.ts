@@ -33,20 +33,22 @@ public stopMonitoring() {
   }
 }
 
-// Math.floor(Math.random() * 2000000
-
 private createNewEventSource(userId: number) {
   if (this.currentEventSource && this.currentEventSource.readyState == EventSource.OPEN) {
     this.stoppedSubscription$.next();
     this.currentEventSource.close();
   }
 
-  this.currentEventSource = new EventSource(`http://localhost:8080/create/${userId}`);
+  this.currentEventSource = new EventSource(`http://localhost:8080/create/${userId}`, { withCredentials: true });
 
     this.currentEventSource.onmessage = (event) => {
-      console.error('ON message:', event);
-      console.log(this.currentEventSource?.readyState);
       const data: EventModel = JSON.parse(event.data) as EventModel;
+
+      if (data.finished) {
+        this.closeConnection();
+        return;
+      }
+
       this.messageSubject$.next({
         date: new Date(),
         description: data.message,
@@ -55,14 +57,16 @@ private createNewEventSource(userId: number) {
     };
 
     this.currentEventSource.onerror = (error) => {
-      console.error('Błąd SSE:', error);
-      console.log(this.currentEventSource?.readyState);
+      console.error('SSE Error:', error);
 
-      this.currentEventSource!.close();
-      this.stoppedSubscription$.next();
-
-      console.log(this.currentEventSource?.readyState == 2);
+      // this.currentEventSource!.close();
+      // this.stoppedSubscription$.next();
     };
 }
+
+private closeConnection() {
+      this.currentEventSource!.close();
+      this.stoppedSubscription$.next();
+  }
 
 }

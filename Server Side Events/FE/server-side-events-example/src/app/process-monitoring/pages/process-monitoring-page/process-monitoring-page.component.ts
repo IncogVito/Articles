@@ -41,15 +41,13 @@ export class ProcessMonitoringPageComponent implements OnInit, OnDestroy {
   }
 
   startMonitoring() {
-    console.log('starting');
+    this.processes = [];
     this.currentlySubscribedProcess = this.processMonitoringService.startMonitoring()
     .pipe(
       takeUntil(this.ngDestroy$)
-      ).subscribe(val => {
-        console.log(val);
-        this.zone.run(() =>
-        this.processes.push(val)
-        );
+      )
+      .subscribe(val => {
+        this.zone.run(() =>this.processes.push(val));
       })
   }
   
@@ -57,11 +55,6 @@ export class ProcessMonitoringPageComponent implements OnInit, OnDestroy {
     this.processMonitoringService.stopMonitoring();
     if (this.currentlySubscribedProcess) {
       this.currentlySubscribedProcess.unsubscribe();
-      this.currentlySubscribedProcess = undefined;
     }
   }
-
-
-
-
 }

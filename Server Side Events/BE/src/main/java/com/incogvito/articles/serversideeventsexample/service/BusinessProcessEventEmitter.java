@@ -55,12 +55,13 @@ public class BusinessProcessEventEmitter {
     }
 
     private void completeProcess(Long userId) {
+        this.sseEventProcessor.sendFinishedEvent(userId);
         this.sseEventProcessor.completeSseEmitter(userId);
     }
 
     public void notifyUser(Long userId, ProcessState processState) {
         String message = messageSource.getMessage(processState.getMessageCode(), new Object[]{}, Locale.getDefault());
-        sseEventProcessor.triggerSseEmitter(userId, message, processState.getProcessStatus());
+        this.sseEventProcessor.sendSseEvent(userId, message, processState.getProcessStatus());
     }
 
     private long getRandomSleepTime() {

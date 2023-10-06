@@ -27,22 +27,38 @@ public class SseEventProcessor {
     @Async
     public void completeSseEmitter(Long userId) {
         SseEmitter sseEmitter = sseEmitters.get(userId);
-        log.info("Completing");
         if (sseEmitter != null) {
-            log.info("Completed");
             sseEmitter.complete();
+            log.debug("Completed sseEmitter for userId: {}", userId);
         }
     }
 
     @SneakyThrows
     @Async
-    public synchronized void triggerSseEmitter(Long userId, String message, ProcessStatus processStatus) {
+    public synchronized void sendSseEvent(Long userId, String message, ProcessStatus processStatus) {
+        log.debug("Triggering new message for userId: {}", userId);
         SseEmitter sseEmitter = sseEmitters.get(userId);
         if (sseEmitter != null) {
             try {
-                sseEmitter.send(SseEventModel.of(message, processStatus));
+                sseEmitter.send(SseEventModel.of(message, processStatus, false));
             } catch (ClientAbortException clientAbortException) {
-              log.info("Client {} stopped the connection.", userId);
+                log.info("Client {} stopped the connection.", userId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @SneakyThrows
+    @Async
+    public synchronized void sendFinishedEvent(Long userId) {
+        log.debug("Triggering finished event for userId: {}", userId);
+        SseEmitter sseEmitter = sseEmitters.get(userId);
+        if (sseEmitter != null) {
+            try {
+                sseEmitter.send(SseEventModel.of(null, null, true));
+            } catch (ClientAbortException clientAbortException) {
+                log.info("Client {} stopped the connection.", userId);
             } catch (IOException e) {
                 e.printStackTrace();
             }

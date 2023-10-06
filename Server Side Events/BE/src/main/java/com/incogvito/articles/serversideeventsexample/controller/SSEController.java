@@ -21,15 +21,4 @@ public class SSEController {
         businessProcessEventEmitter.startMonitoringProcess(userId);
         return sseEmitter;
     }
-
-    @CrossOrigin("http://localhost:4200")
-    @GetMapping("/complete/{userId}")
-    public void completeSseEmitter(@PathVariable Long userId) {
-        sseEventProcessor.completeSseEmitter(userId);
-    }
-
-    @GetMapping("/trigger/{userId}/{message}")
-    public void triggerSseEmitter(@PathVariable Long userId, @PathVariable String message) {
-        sseEventProcessor.triggerSseEmitter(userId, message, ProcessStatus.SUCCESS);
-    }
 }
