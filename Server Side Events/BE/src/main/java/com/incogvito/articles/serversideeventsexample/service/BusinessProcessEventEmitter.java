@@ -34,7 +34,7 @@ public class BusinessProcessEventEmitter {
 
     @Async
     public void startMonitoringProcess(Long userId) {
-        log.info("Starting process monitoring for userId: " + userId);
+        log.info("Starting process monitoring for userId: {}", userId);
         List<ProcessState> processStates = getRandomPath();
         runProcess(userId, new LinkedList<>(processStates));
     }

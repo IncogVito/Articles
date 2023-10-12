@@ -24,15 +24,6 @@ public class SseEventProcessor {
         return sseEmitter;
     }
 
-    @Async
-    public void completeSseEmitter(Long userId) {
-        SseEmitter sseEmitter = sseEmitters.get(userId);
-        if (sseEmitter != null) {
-            sseEmitter.complete();
-            log.debug("Completed sseEmitter for userId: {}", userId);
-        }
-    }
-
     @SneakyThrows
     @Async
     public synchronized void sendSseEvent(Long userId, String message, ProcessStatus processStatus) {
@@ -62,6 +53,15 @@ public class SseEventProcessor {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Async
+    public void completeSseEmitter(Long userId) {
+        SseEmitter sseEmitter = sseEmitters.get(userId);
+        if (sseEmitter != null) {
+            sseEmitter.complete();
+            log.debug("Completed sseEmitter for userId: {}", userId);
         }
     }
 }
