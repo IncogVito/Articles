@@ -1,0 +1,36 @@
+<!-- The old way with ngSwitch -->
+<button (click)="changeSwitchValue()">Change curr value</button>
+
+<container-element [ngSwitch]="switchCurrentValue">
+  <span *ngSwitchCase="1">
+    Displaying 1
+  </span>
+  <span *ngSwitchCase="2">
+    Displaying 2
+  </span>
+  <span *ngSwitchCase="3">
+    Displaying 3
+  </span>
+  <span *ngSwitchDefault>
+    Displaying default
+  </span>
+
+</container-element>
+
+
+<!-- The new way with @switch -->
+
+@switch (switchCurrentValue) {
+  @case (1) {
+    <span>Displaying 1</span>
+  }
+  @case (2) {
+    <span>Displaying 2</span>
+  }
+  @case (3) {
+    <span>Displaying 3</span>
+  }
+  @default {
+    <span>Displaying default</span>
+  }
+}

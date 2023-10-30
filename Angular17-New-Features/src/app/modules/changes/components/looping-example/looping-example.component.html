@@ -1,0 +1,23 @@
+<button (click)="items = []">Delete All</button>
+
+<!-- Looping using on old syntax based on ngTemplate  -->
+<ng-container *ngIf="items.length; else emptyListTemplate">
+  <tr *ngFor="let item of items;">
+    <td>{{ item.name }}</td>
+  </tr>
+</ng-container>
+
+<ng-template #emptyListTemplate>
+  <p>No item has been found!</p>
+</ng-template>
+
+
+<!-- Looping using a new declarative syntax  -->
+@for (item of items; track item.name) {
+  <tr>
+    <td>{{ item.name }}</td>
+  </tr>
+} @empty {
+  <p>No item has been found!</p>
+}
+

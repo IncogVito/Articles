@@ -1,0 +1,20 @@
+
+<button (click)="statusStarted = !statusStarted;">
+  Change Status
+</button>
+
+<span *ngIf="statusStarted; else statusStopped">
+  [NgIf] - Status started
+</span>
+<ng-template #statusStopped>
+  [NgIf] - Status stopped
+</ng-template>
+
+
+@if(statusStarted) {
+  <span>&#64;If - Status started</span>
+} @else {
+  <span>&#64;lse - Status stopped</span>
+}
+
+

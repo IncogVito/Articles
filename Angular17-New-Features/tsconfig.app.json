@@ -3,10 +3,15 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types" : ["node"],
+    "target": "ES2022",
+    "lib": ["es2023", "esnext.disposable", "esnext.decorators", "dom"],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "files": [
-    "src/main.ts"
+    "src/main.ts",
+    "src/polyfills.ts"
   ],
   "include": [
     "src/**/*.d.ts"
